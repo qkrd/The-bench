@@ -205,8 +205,8 @@
       threads: 16,
       cacheMb: 32,
       boostGhz: 4.5,
-      score: 23000,
-      singleScore: 3500,
+      score: 23,
+      singleScore: 35,
       tier: "mainstream"
     };
     return matchHardware(cpuName, cpus, "CPU", fallbackCpu);
@@ -221,7 +221,7 @@
       brand: "Unknown",
       vramGb: 8,
       boostGhz: 2.4,
-      score: 17000,
+      score: 17,
       tier: "mainstream"
     };
     return matchHardware(gpuName, gpus, "GPU", fallbackGpu);
@@ -248,8 +248,8 @@
       return {
         id: "mainstream",
         label: "FHD/QHD 주류 게이밍",
-        minCpuScore: 23000,
-        minGpuScore: 17000,
+        minCpuScore: 23,
+        minGpuScore: 17,
         minRamGb: 16,
         targetRes: "1440p 144Hz"
       };
@@ -284,8 +284,8 @@
       };
     }
 
-    var cpuNorm = cpuScore / (mainstreamTier.minCpuScore || 23000);
-    var gpuNorm = gpuScore / (mainstreamTier.minGpuScore || 17000);
+    var cpuNorm = cpuScore / (mainstreamTier.minCpuScore || 23);
+    var gpuNorm = gpuScore / (mainstreamTier.minGpuScore || 17);
 
     if (gpuNorm < cpuNorm * 0.75) {
       return {
@@ -484,8 +484,8 @@
     var mainstreamTier = findTierById(tiers, "mainstream", {
       id: "mainstream",
       label: "FHD/QHD 주류 게이밍",
-      minCpuScore: 23000,
-      minGpuScore: 17000,
+      minCpuScore: 23,
+      minGpuScore: 17,
       minRamGb: 16,
       targetRes: "1440p 144Hz"
     });
@@ -493,20 +493,20 @@
     var enthusiastTier = findTierById(tiers, "enthusiast", {
       id: "enthusiast",
       label: "4K 플래그십",
-      minCpuScore: 44000,
-      minGpuScore: 39000,
+      minCpuScore: 44,
+      minGpuScore: 39,
       minRamGb: 32,
       targetRes: "4K Ultra"
     });
 
-    var maxCpuScore = getMaxScore(data.cpus, enthusiastTier.minCpuScore || 44000);
-    var maxGpuScore = getMaxScore(data.gpus, enthusiastTier.minGpuScore || 39000);
+    var maxCpuScore = getMaxScore(data.cpus, enthusiastTier.minCpuScore || 44);
+    var maxGpuScore = getMaxScore(data.gpus, enthusiastTier.minGpuScore || 39);
 
     var tier = resolveTier(cpuScore, gpuScore, ramGb, tiers);
 
     var vsMainstream = {
-      cpuRatioText: (cpuScore / (mainstreamTier.minCpuScore || 23000)).toFixed(2) + "x",
-      gpuRatioText: (gpuScore / (mainstreamTier.minGpuScore || 17000)).toFixed(2) + "x",
+      cpuRatioText: (cpuScore / (mainstreamTier.minCpuScore || 23)).toFixed(2) + "x",
+      gpuRatioText: (gpuScore / (mainstreamTier.minGpuScore || 17)).toFixed(2) + "x",
       cpuPct: clampPct((cpuScore / maxCpuScore) * 100),
       gpuPct: clampPct((gpuScore / maxGpuScore) * 100),
       ramPct: clampPct((ramGb / (enthusiastTier.minRamGb || 32)) * 100)

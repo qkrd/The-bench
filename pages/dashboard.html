@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="THE SPEC BENCH — CPU-Z 스타일 시스템 사양 분석 및 실시간 하드웨어 모니터">
-    <title>THE SPEC BENCH · Dashboard</title>
+    <meta name="description" content="The bench — CPU-Z 스타일 시스템 사양 분석 및 실시간 하드웨어 모니터">
+    <title>The bench · Dashboard</title>
     <link rel="stylesheet" href="../css/style.css">
   </head>
   <body>
@@ -12,7 +12,7 @@
       <!-- 상단 바: 사용자 배지, DB 연결 상태, 테마 전환, Supabase 설정 -->
       <header class="top-bar">
         <div class="brand-wrap">
-          <h1>THE SPEC BENCH</h1>
+          <h1>The bench</h1>
           <p class="brand-subtitle">2026-11 Gaming Benchmark &amp; System Inspector</p>
         </div>
 
@@ -366,10 +366,10 @@
                 <div class="chart-inner-frame" style="padding: 16px 20px 44px 16px;">
                   <div class="spectrum-chart-wrap">
                     <div class="chart-y-axis" id="cmp-y-axis">
-                      <span>100,000</span>
-                      <span>75,000</span>
-                      <span>50,000</span>
-                      <span>25,000</span>
+                      <span>100</span>
+                      <span>75</span>
+                      <span>50</span>
+                      <span>25</span>
                       <span>0</span>
                     </div>
                     <div class="chart-plot-area" id="cmp-plot-area" style="height: 185px;"></div>
@@ -405,7 +405,7 @@
       </main>
 
       <footer class="page-footer">
-        <span>THE SPEC BENCH · 2026-11 Benchmark &amp; Real-time Telemetry</span>
+        <span>The bench · 2026-11 Benchmark &amp; Real-time Telemetry</span>
         <a href="https://supabase.com/docs" target="_blank" rel="noopener noreferrer">Supabase REST API 가이드</a>
       </footer>
 
@@ -611,7 +611,7 @@
           }
           const chartItems = sortedAll.slice(start, end);
 
-          const maxScore = chartItems.length ? Math.ceil((chartItems[0].score * 1.08) / 5000) * 5000 : 100000;
+          const maxScore = chartItems.length ? Math.max(20, Math.ceil((chartItems[0].score * 1.08) / 20) * 20) : 100;
 
           const yAxis = document.getElementById("cmp-y-axis");
           yAxis.innerHTML = "";
