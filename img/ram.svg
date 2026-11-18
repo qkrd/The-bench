@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 160" width="240" height="160">
+  <!-- RAM 1 -->
+  <rect x="14" y="16" width="212" height="48" rx="6" fill="#f8fafc" stroke="#1e293b" stroke-width="3"/>
+  <rect x="26" y="24" width="22" height="32" rx="2" fill="#e2e8f0" stroke="#64748b" stroke-width="1.5"/>
+  <rect x="192" y="24" width="22" height="32" rx="2" fill="#e2e8f0" stroke="#64748b" stroke-width="1.5"/>
+  <rect x="24" y="64" width="90" height="5" fill="#fbbf24" stroke="#1e293b" stroke-width="1"/>
+  <rect x="126" y="64" width="90" height="5" fill="#fbbf24" stroke="#1e293b" stroke-width="1"/>
+  <text x="120" y="48" font-family="system-ui, sans-serif" font-size="22" font-weight="bold" fill="#0f172a" text-anchor="middle">RAM 1</text>
+
+  <!-- RAM 2 -->
+  <rect x="14" y="90" width="212" height="48" rx="6" fill="#f8fafc" stroke="#1e293b" stroke-width="3"/>
+  <rect x="26" y="98" width="22" height="32" rx="2" fill="#e2e8f0" stroke="#64748b" stroke-width="1.5"/>
+  <rect x="192" y="98" width="22" height="32" rx="2" fill="#e2e8f0" stroke="#64748b" stroke-width="1.5"/>
+  <rect x="24" y="138" width="90" height="5" fill="#fbbf24" stroke="#1e293b" stroke-width="1"/>
+  <rect x="126" y="138" width="90" height="5" fill="#fbbf24" stroke="#1e293b" stroke-width="1"/>
+  <text x="120" y="122" font-family="system-ui, sans-serif" font-size="22" font-weight="bold" fill="#0f172a" text-anchor="middle">RAM 2</text>
+</svg>

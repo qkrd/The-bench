@@ -1,0 +1,1024 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="THE SPEC BENCH — CPU-Z 스타일 시스템 사양 분석 및 실시간 하드웨어 모니터">
+    <title>THE SPEC BENCH · Dashboard</title>
+    <link rel="stylesheet" href="../css/style.css">
+  </head>
+  <body>
+    <div class="dashboard-shell">
+      <!-- 상단 바: 사용자 배지, DB 연결 상태, 테마 전환, Supabase 설정 -->
+      <header class="top-bar">
+        <div class="brand-wrap">
+          <h1>THE SPEC BENCH</h1>
+          <p class="brand-subtitle">2026-11 Gaming Benchmark &amp; System Inspector</p>
+        </div>
+
+        <div class="top-actions">
+          <span id="user-badge" class="user-pill">접속 중</span>
+          <span id="db-status-badge" class="status-pill fallback">로컬 폴백(Supabase 미연결)</span>
+          <button type="button" class="box-btn small" id="theme-toggle-btn">라이트 모드</button>
+          <button type="button" class="icon-btn" id="open-db-config-btn" aria-label="Supabase DB 설정" title="Supabase DB 설정">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.6.85 1 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+          </button>
+          <button type="button" class="box-btn small" id="refresh-btn">새로고침</button>
+          <a href="spec-setup.html" class="box-btn small" id="go-setup-link">스펙 다시 가져오기</a>
+          <a href="../index.html" class="box-btn small">로그인 화면</a>
+        </div>
+      </header>
+
+      <main>
+        <!-- R1 스타일 CPU-Z 모던 다크 스펙 윈도우 (인스펙터 전용 페이지) -->
+        <section class="cpuz-window" id="inspector-section" aria-label="시스템 사양 및 벤치마크 인스펙터">
+          <div class="cpuz-titlebar">
+            <span class="cpuz-title">SPEC INSPECTOR · v2026.11</span>
+            <span id="status-text" class="cpuz-sync-status">측정 중...</span>
+          </div>
+
+          <!-- CSS-Only 라디오 탭 컨트롤 (:checked ~) -->
+          <input type="radio" name="cpuz-tab" id="tab-cpu" class="cpuz-radio" checked>
+          <input type="radio" name="cpuz-tab" id="tab-graphics" class="cpuz-radio">
+          <input type="radio" name="cpuz-tab" id="tab-memory" class="cpuz-radio">
+          <input type="radio" name="cpuz-tab" id="tab-monitor" class="cpuz-radio">
+          <input type="radio" name="cpuz-tab" id="tab-compare" class="cpuz-radio">
+
+          <nav class="cpuz-tab-bar" aria-label="인스펙터 탭">
+            <label for="tab-cpu">CPU</label>
+            <label for="tab-graphics">Graphics</label>
+            <label for="tab-memory">Memory</label>
+            <label for="tab-monitor">Monitor</label>
+            <label for="tab-compare">Compare</label>
+          </nav>
+
+          <div class="cpuz-panels">
+            <!-- 1. CPU 탭 -->
+            <div class="cpuz-panel" id="panel-cpu">
+              <fieldset class="cpuz-group">
+                <legend>Processor</legend>
+                <div class="cpuz-grid">
+                  <div class="cpuz-row full">
+                    <span class="cpuz-label">Name</span>
+                    <div class="cpuz-value" id="cpuz-cpu-name">확인 중...</div>
+                  </div>
+                  <div class="cpuz-row">
+                    <span class="cpuz-label">Brand / Tier</span>
+                    <div class="cpuz-value" id="cpuz-cpu-brand">-</div>
+                  </div>
+                  <div class="cpuz-row">
+                    <span class="cpuz-label">Cores / Threads</span>
+                    <div class="cpuz-value" id="cpuz-cpu-threads">-</div>
+                  </div>
+                  <div class="cpuz-row">
+                    <span class="cpuz-label">L3 Cache / Boost</span>
+                    <div class="cpuz-value" id="cpuz-cpu-cache">-</div>
+                  </div>
+                  <div class="cpuz-row full">
+                    <span class="cpuz-label">Operating System</span>
+                    <div class="cpuz-value" id="cpuz-os-name">-</div>
+                  </div>
+                </div>
+              </fieldset>
+
+              <fieldset class="cpuz-group">
+                <legend>Live Telemetry &amp; Source</legend>
+                <div class="cpuz-grid">
+                  <div class="cpuz-row">
+                    <span class="cpuz-label">CPU Utilization</span>
+                    <div class="cpuz-value" id="cpuz-cpu-usage">측정 중...</div>
+                  </div>
+                  <div class="cpuz-row">
+                    <span class="cpuz-label">Detection Source</span>
+                    <div class="cpuz-value" id="cpuz-source-type">browser</div>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+
+            <!-- 2. Graphics 탭 -->
+            <div class="cpuz-panel" id="panel-graphics">
+              <fieldset class="cpuz-group">
+                <legend>Display Device Selection</legend>
+                <div class="cpuz-grid">
+                  <div class="cpuz-row full">
+                    <span class="cpuz-label">Name</span>
+                    <div class="cpuz-value" id="cpuz-gpu-name">확인 중...</div>
+                  </div>
+                  <div class="cpuz-row">
+                    <span class="cpuz-label">Vendor / Tier</span>
+                    <div class="cpuz-value" id="cpuz-gpu-brand">-</div>
+                  </div>
+                  <div class="cpuz-row">
+                    <span class="cpuz-label">Memory Size</span>
+                    <div class="cpuz-value" id="cpuz-gpu-vram">-</div>
+                  </div>
+                  <div class="cpuz-row">
+                    <span class="cpuz-label">Boost Clock</span>
+                    <div class="cpuz-value" id="cpuz-gpu-clock">-</div>
+                  </div>
+                  <div class="cpuz-row full">
+                    <span class="cpuz-label">Live Utilization</span>
+                    <div class="cpuz-value" id="cpuz-gpu-usage">측정 중...</div>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+
+            <!-- 3. Memory 탭 -->
+            <div class="cpuz-panel" id="panel-memory">
+              <fieldset class="cpuz-group">
+                <legend>Memory Slot Selection</legend>
+                <div class="cpuz-grid">
+                  <div class="cpuz-row">
+                    <label class="cpuz-label" for="memory-slot-select">Slot</label>
+                    <select id="memory-slot-select" class="cpuz-select">
+                      <option value="0">Slot #1</option>
+                    </select>
+                  </div>
+                  <div class="cpuz-row">
+                    <span class="cpuz-label">Module Size</span>
+                    <div class="cpuz-value" id="cpuz-slot-capacity">-</div>
+                  </div>
+                  <div class="cpuz-row">
+                    <span class="cpuz-label">Max Bandwidth</span>
+                    <div class="cpuz-value" id="cpuz-slot-speed">-</div>
+                  </div>
+                  <div class="cpuz-row">
+                    <span class="cpuz-label">Total Memory</span>
+                    <div class="cpuz-value" id="cpuz-ram-total">-</div>
+                  </div>
+                  <div class="cpuz-row full">
+                    <span class="cpuz-label">Channel Config</span>
+                    <div class="cpuz-value" id="cpuz-ram-channels">-</div>
+                  </div>
+                </div>
+              </fieldset>
+
+              <fieldset class="cpuz-group">
+                <legend>System Memory &amp; Usage</legend>
+                <div class="cpuz-grid">
+                  <div class="cpuz-row">
+                    <span class="cpuz-label">Live Usage</span>
+                    <div class="cpuz-value" id="cpuz-ram-usage">측정 중...</div>
+                  </div>
+                  <div class="cpuz-row full">
+                    <span class="cpuz-label">Host OS</span>
+                    <div class="cpuz-value" id="cpuz-ram-os">-</div>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+
+            <!-- 4. Monitor 탭 (실시간 점유율 차트 + 프로세스 순위) -->
+            <div class="cpuz-panel" id="panel-monitor">
+              <div class="hardware-grid">
+                <!-- CPU 열 -->
+                <div class="hardware-column" id="col-CPU">
+                  <div class="part-header-box">
+                    <div class="part-header-title">Processor Telemetry</div>
+                    <div class="part-header-caption-row">
+                      <div class="part-header-caption" id="cpu-caption">CPU 확인 중...</div>
+                      <span class="status-pill usage-pill" id="cpu-usage-badge">0%</span>
+                    </div>
+                  </div>
+
+                  <div class="pie-chart-wrap">
+                    <div class="pie-chart" id="cpu-pie" role="img" aria-label="CPU 점유율 원 그래프">
+                      <div class="pie-chart-center">
+                        <span>CPU</span>
+                        <span id="cpu-pie-label">0%</span>
+                      </div>
+                    </div>
+                    <span class="pie-chart-caption">점유율 비중</span>
+                  </div>
+
+                  <ol class="ranking-list" id="cpu-list">
+                    <li>측정 중...</li>
+                  </ol>
+                </div>
+
+                <!-- GPU 열 -->
+                <div class="hardware-column" id="col-GPU">
+                  <div class="part-header-box">
+                    <div class="part-header-title">Graphics Telemetry</div>
+                    <div class="part-header-caption-row">
+                      <div class="part-header-caption" id="gpu-caption">GPU 확인 중...</div>
+                      <span class="status-pill usage-pill" id="gpu-usage-badge">0%</span>
+                    </div>
+                  </div>
+
+                  <div class="pie-chart-wrap">
+                    <div class="pie-chart" id="gpu-pie" role="img" aria-label="GPU 점유율 원 그래프">
+                      <div class="pie-chart-center">
+                        <span>GPU</span>
+                        <span id="gpu-pie-label">0%</span>
+                      </div>
+                    </div>
+                    <span class="pie-chart-caption">점유율 비중</span>
+                  </div>
+
+                  <ol class="ranking-list" id="gpu-list">
+                    <li>측정 중...</li>
+                  </ol>
+                </div>
+
+                <!-- RAM 열 -->
+                <div class="hardware-column" id="col-RAM">
+                  <div class="part-header-box">
+                    <div class="part-header-title">Memory Telemetry</div>
+                    <div class="part-header-caption-row">
+                      <div class="part-header-caption" id="ram-caption">장착 확인 중...</div>
+                      <span class="status-pill usage-pill" id="ram-usage-badge">0%</span>
+                    </div>
+                    <div id="ram-sticks-list" class="ram-sticks-stack">
+                      <div class="ram-stick-chip">
+                        <span>RAM 1</span>
+                        <span>16 GB</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="pie-chart-wrap">
+                    <div class="pie-chart" id="ram-pie" role="img" aria-label="RAM 점유율 원 그래프">
+                      <div class="pie-chart-center">
+                        <span>RAM</span>
+                        <span id="ram-pie-label">0%</span>
+                      </div>
+                    </div>
+                    <span class="pie-chart-caption">점유율 비중</span>
+                  </div>
+
+                  <ol class="ranking-list" id="ram-list">
+                    <li>측정 중...</li>
+                  </ol>
+                </div>
+              </div>
+
+              <form id="filter-form" class="compact-filter" onsubmit="event.preventDefault()">
+                <div>
+                  <label for="rank-limit-input" style="font-weight: 700; margin-right: 6px; font-size: 0.85rem;">표시 순위 (1~5)</label>
+                  <input
+                    type="number"
+                    id="rank-limit-input"
+                    name="limit"
+                    min="1"
+                    max="5"
+                    value="5"
+                    required>
+                </div>
+
+                <fieldset>
+                  <legend>표시 부품</legend>
+                  <label class="part-check-label"><input type="checkbox" name="part" value="CPU" checked><span>CPU</span></label>
+                  <label class="part-check-label"><input type="checkbox" name="part" value="GPU" checked><span>GPU</span></label>
+                  <label class="part-check-label"><input type="checkbox" name="part" value="RAM" checked><span>RAM</span></label>
+                </fieldset>
+
+                <button type="submit" class="box-btn small primary">적용</button>
+              </form>
+
+              <section id="spec-section" aria-label="호스트 시스템 요약">
+                <dl class="spec-dl">
+                  <dt>CPU</dt>
+                  <dd id="spec-cpu">측정 중...</dd>
+
+                  <dt>GPU</dt>
+                  <dd id="spec-gpu">측정 중...</dd>
+
+                  <dt>RAM</dt>
+                  <dd id="spec-ram">측정 중...</dd>
+
+                  <dt>OS</dt>
+                  <dd id="spec-os">측정 중...</dd>
+                </dl>
+              </section>
+            </div>
+
+            <!-- 5. Compare 탭 (2026-11 벤치마크 비교 + R3 스펙트럼 차트 + 게임 칩 + 테이블) -->
+            <div class="cpuz-panel" id="panel-compare">
+              <div class="compare-summary-strip">
+                <div class="summary-stat-box">
+                  <div class="summary-stat-label">TOTAL SCORE</div>
+                  <div class="summary-stat-val" id="bento-total-score">0</div>
+                  <div class="summary-stat-sub" id="bento-target-res">권장 해상도 계산 중...</div>
+                </div>
+                <div class="summary-stat-box">
+                  <div class="summary-stat-label">GAMING TIER</div>
+                  <div class="summary-stat-val" id="bento-tier-label">분석 중</div>
+                  <div class="summary-stat-sub" id="bento-spec-summary">CPU · GPU · RAM</div>
+                </div>
+                <div class="summary-stat-box">
+                  <div class="summary-stat-label">VS MAINSTREAM</div>
+                  <div class="summary-stat-val" id="bento-cpu-ratio">1.00x</div>
+                  <div class="summary-stat-sub" id="bento-gpu-ratio">GPU 배율 계산 중...</div>
+                </div>
+                <div class="summary-stat-box">
+                  <div class="summary-stat-label">BOTTLENECK</div>
+                  <div class="summary-stat-val" id="bento-bottleneck-status">진단 중</div>
+                  <div class="summary-stat-sub" id="bento-bottleneck-msg">하드웨어 균형 확인 중...</div>
+                </div>
+              </div>
+
+              <!-- 내 스펙 기준 점수 산출표 (K 단위 없음) -->
+              <div class="table-scroll" style="margin-bottom: 18px;">
+                <table class="compare-table" aria-label="내 스펙 기준 점수표">
+                  <thead>
+                    <tr>
+                      <th scope="col">부품</th>
+                      <th scope="col">적용 모델 / 스펙</th>
+                      <th scope="col">핵심 사양</th>
+                      <th scope="col">가중치</th>
+                      <th scope="col">산출 점수</th>
+                    </tr>
+                  </thead>
+                  <tbody id="score-breakdown-body">
+                    <tr>
+                      <td colspan="5">스펙을 불러오면 점수를 산출합니다.</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- R3 스타일 내 PC 위치 비교 바 차트 (비슷한 성능대 주변 나열) -->
+              <div class="stats-card" style="padding: 20px; margin-bottom: 18px;">
+                <div class="section-header" style="margin-bottom: 12px;">
+                  <div>
+                    <h3 style="margin-bottom: 2px; font-size: 1rem;">Benchmark Position (내 PC 위치)</h3>
+                    <p class="section-subtitle" id="bento-match-note">매칭 상태 확인 중</p>
+                  </div>
+                  <div class="pill-toggle-group" role="tablist" aria-label="비교 차트 전환">
+                    <button type="button" class="pill-toggle-btn active" id="cmp-toggle-gpu" role="tab" aria-selected="true">GPU</button>
+                    <button type="button" class="pill-toggle-btn" id="cmp-toggle-cpu" role="tab" aria-selected="false">CPU</button>
+                  </div>
+                </div>
+
+                <div class="chart-legend" aria-label="막대 색상 기준">
+                  <span class="legend-item"><span class="legend-swatch" style="background: #38bdf8;"></span>상위 (+15%↑)</span>
+                  <span class="legend-item"><span class="legend-swatch" style="background: #34d399;"></span>동급 (±15%)</span>
+                  <span class="legend-item"><span class="legend-swatch" style="background: #e040fb;"></span>내 PC</span>
+                  <span class="legend-item"><span class="legend-swatch" style="background: #64748b;"></span>하위 (-15%↓)</span>
+                </div>
+
+                <div class="chart-inner-frame" style="padding: 16px 20px 44px 16px;">
+                  <div class="spectrum-chart-wrap">
+                    <div class="chart-y-axis" id="cmp-y-axis">
+                      <span>100,000</span>
+                      <span>75,000</span>
+                      <span>50,000</span>
+                      <span>25,000</span>
+                      <span>0</span>
+                    </div>
+                    <div class="chart-plot-area" id="cmp-plot-area" style="height: 185px;"></div>
+                  </div>
+                  <div class="chart-x-labels" id="cmp-x-labels"></div>
+                </div>
+              </div>
+
+              <!-- 2026-11 스펙 비교표 -->
+              <div class="table-scroll">
+                <table class="compare-table">
+                  <thead>
+                    <tr>
+                      <th scope="col">구분</th>
+                      <th scope="col">모델 / 구성</th>
+                      <th scope="col">코어</th>
+                      <th scope="col">스레드</th>
+                      <th scope="col">캐시 / VRAM</th>
+                      <th scope="col">부스트 클럭</th>
+                      <th scope="col">벤치 점수</th>
+                    </tr>
+                  </thead>
+                  <tbody id="compare-table-body">
+                    <tr>
+                      <td colspan="7">비교 데이터를 불러오는 중...</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="page-footer">
+        <span>THE SPEC BENCH · 2026-11 Benchmark &amp; Real-time Telemetry</span>
+        <a href="https://supabase.com/docs" target="_blank" rel="noopener noreferrer">Supabase REST API 가이드</a>
+      </footer>
+
+      <!-- Supabase 설정 모달 -->
+      <div class="modal-overlay" id="db-config-modal" role="dialog" aria-modal="true" aria-labelledby="db-config-title">
+        <div class="modal-card">
+          <h2 id="db-config-title">Supabase Cloud 설정</h2>
+          <p class="admin-hint">
+            URL과 Anon Key를 입력하면 클라우드 DB에 스펙을 동기화합니다. 비워두면 로컬 폴백으로 동작합니다.
+            <a href="https://supabase.com/dashboard" target="_blank" rel="noopener noreferrer">Supabase 대시보드</a>
+          </p>
+
+          <form id="db-config-form">
+            <div class="form-row">
+              <label for="db-url-input">Project URL</label>
+              <input type="url" id="db-url-input" name="url" placeholder="https://xxxx.supabase.co">
+            </div>
+
+            <div class="form-row">
+              <label for="db-anon-input">Anon Key</label>
+              <input type="text" id="db-anon-input" name="anonKey" placeholder="eyJhbGciOi...">
+            </div>
+
+            <p class="form-feedback" id="db-config-feedback"></p>
+
+            <div class="modal-actions">
+              <button type="submit" class="box-btn primary" id="save-db-config-btn">저장</button>
+              <button type="button" class="box-btn" id="clear-db-config-btn">초기화</button>
+              <button type="button" class="box-btn" id="close-db-config-btn">닫기</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- 클래식 브라우저 스크립트 (상대 경로 ../js/...) -->
+    <script src="../js/config.js"></script>
+    <script src="../js/supabase-client.js"></script>
+    <script src="../js/spec-detector.js"></script>
+    <script src="../js/benchmark-compare.js"></script>
+    <script>
+      (function () {
+        // 모니터 파이 컬러 팔레트 (1위는 마젠타/바이올렛 포인트)
+        const SLICE_COLORS = ["#e040fb", "#38bdf8", "#10b981", "#f59e0b", "#64748b"];
+
+        const params = new URLSearchParams(window.location.search);
+        const userId = params.get("id") || "admin";
+        const userName = params.get("name") || userId;
+        document.getElementById("user-badge").textContent = "접속자: " + userName;
+        document.getElementById("go-setup-link").href =
+          "spec-setup.html?id=" + encodeURIComponent(userId) + "&name=" + encodeURIComponent(userName);
+
+        const dbStatusBadge = document.getElementById("db-status-badge");
+        const themeToggleBtn = document.getElementById("theme-toggle-btn");
+        const dbConfigModal = document.getElementById("db-config-modal");
+
+        let rankLimit = 5;
+        let lastData = null;
+        let benchmarksData = null;
+        let currentSourceType = "browser";
+        let currentOsName = "Windows";
+        let currentSpec = {
+          cpuName: "",
+          cpuThreads: 16,
+          gpuName: "",
+          gpuVramGb: 8,
+          ramGb: 16
+        };
+        let cmpChartMode = "gpu";
+        let latestRamSticks = [];
+
+        // 1. 라이트/다크 테마 토글 (.라이트테마)
+        function applyTheme(theme) {
+          const isLight = theme === "light";
+          document.body.classList.toggle("라이트테마", isLight);
+          themeToggleBtn.textContent = isLight ? "다크 모드" : "라이트 모드";
+        }
+        applyTheme(localStorage.getItem("hw_theme") || "dark");
+
+        themeToggleBtn.addEventListener("click", () => {
+          const next = document.body.classList.contains("라이트테마") ? "dark" : "light";
+          localStorage.setItem("hw_theme", next);
+          applyTheme(next);
+        });
+
+        // 2. Supabase 연결 상태 및 설정 모달
+        function refreshDbStatus() {
+          if (!window.AppDB) return;
+          const configured = window.AppDB.isConfigured();
+          dbStatusBadge.textContent = window.AppDB.getModeLabel();
+          dbStatusBadge.classList.toggle("cloud", configured);
+          dbStatusBadge.classList.toggle("fallback", !configured);
+        }
+
+        document.getElementById("open-db-config-btn").addEventListener("click", () => {
+          const cfg = window.AppDB ? window.AppDB.getConfig() : { url: "", anonKey: "" };
+          document.getElementById("db-url-input").value = cfg.url || "";
+          document.getElementById("db-anon-input").value = cfg.anonKey || "";
+          document.getElementById("db-config-feedback").textContent = "";
+          dbConfigModal.classList.add("active");
+          document.getElementById("db-url-input").focus();
+        });
+
+        document.getElementById("close-db-config-btn").addEventListener("click", () => {
+          dbConfigModal.classList.remove("active");
+        });
+
+        document.getElementById("clear-db-config-btn").addEventListener("click", () => {
+          if (window.AppDB) window.AppDB.saveConfig("", "");
+          document.getElementById("db-url-input").value = "";
+          document.getElementById("db-anon-input").value = "";
+          const fb = document.getElementById("db-config-feedback");
+          fb.className = "form-feedback success";
+          fb.textContent = "초기화 완료: 로컬 폴백 모드로 전환되었습니다.";
+          refreshDbStatus();
+        });
+
+        document.getElementById("db-config-form").addEventListener("submit", (event) => {
+          event.preventDefault();
+          const url = document.getElementById("db-url-input").value.trim();
+          const anonKey = document.getElementById("db-anon-input").value.trim();
+          if (window.AppDB) window.AppDB.saveConfig(url, anonKey);
+          refreshDbStatus();
+          const fb = document.getElementById("db-config-feedback");
+          fb.className = "form-feedback success";
+          fb.textContent = window.AppDB && window.AppDB.isConfigured()
+            ? "Supabase Cloud 설정이 저장되었습니다."
+            : "로컬 폴백 설정이 저장되었습니다.";
+        });
+
+        // 3. 인스펙터 스펙 상태 & CPU-Z / Compare 연동
+        function getFormSpec() {
+          return currentSpec;
+        }
+
+        function applySpec(spec, sourceType) {
+          if (sourceType) currentSourceType = sourceType;
+          if (spec.osName) currentOsName = spec.osName;
+          currentSpec = {
+            cpuName: spec.cpuName || "",
+            cpuThreads: Number(spec.cpuThreads) || 16,
+            gpuName: spec.gpuName || "",
+            gpuVramGb: Number(spec.gpuVramGb) || 8,
+            ramGb: Number(spec.ramGb) || 16
+          };
+          renderMemorySlotsUI(currentSpec.ramGb);
+          renderBenchmarkAnalysis();
+        }
+
+        function renderMemorySlotsUI(fallbackRamGb) {
+          const select = document.getElementById("memory-slot-select");
+          const sticks = latestRamSticks.length > 0
+            ? latestRamSticks
+            : [
+                { label: "Slot #1", capacity: Math.round((fallbackRamGb || 16) / 2) + " GB", speed: "Auto" },
+                { label: "Slot #2", capacity: Math.round((fallbackRamGb || 16) / 2) + " GB", speed: "Auto" }
+              ];
+
+          const prevVal = select.value;
+          select.innerHTML = "";
+          sticks.forEach((st, idx) => {
+            const opt = document.createElement("option");
+            opt.value = String(idx);
+            opt.textContent = "Slot #" + (idx + 1) + " (" + st.capacity + ")";
+            select.appendChild(opt);
+          });
+          if (prevVal && Number(prevVal) < sticks.length) {
+            select.value = prevVal;
+          }
+
+          const chosen = sticks[Number(select.value) || 0] || sticks[0];
+          document.getElementById("cpuz-slot-capacity").textContent = chosen ? chosen.capacity : "-";
+          document.getElementById("cpuz-slot-speed").textContent = chosen && chosen.speed ? chosen.speed : "Dual / DDR";
+          document.getElementById("cpuz-ram-total").textContent = (fallbackRamGb || 16) + " GB";
+          document.getElementById("cpuz-ram-channels").textContent = sticks.length + " Slots Populated";
+          document.getElementById("cpuz-ram-os").textContent = currentOsName || "Windows";
+        }
+
+        document.getElementById("memory-slot-select").addEventListener("change", () => {
+          const spec = getFormSpec();
+          renderMemorySlotsUI(spec.ramGb);
+        });
+
+        function renderCompareBarChart(analysis, spec) {
+          if (!benchmarksData || !analysis) return;
+          const list = (cmpChartMode === "gpu" ? benchmarksData.gpus : benchmarksData.cpus) || [];
+          const userItem = cmpChartMode === "gpu" ? analysis.gpuMatch.item : analysis.cpuMatch.item;
+
+          // 전체 목록을 점수 내림차순 정렬 후 내 PC와 점수가 비슷한 주변 제품들(위 5개 + 내 PC + 아래 5개) 나열
+          const sortedAll = [...list].sort((a, b) => (b.score || 0) - (a.score || 0));
+          let userIdx = sortedAll.findIndex((x) => x.id === userItem.id);
+          if (userIdx === -1) {
+            sortedAll.push(userItem);
+            sortedAll.sort((a, b) => (b.score || 0) - (a.score || 0));
+            userIdx = sortedAll.findIndex((x) => x.id === userItem.id);
+          }
+
+          const windowSize = 11;
+          let start = Math.max(0, userIdx - 5);
+          let end = Math.min(sortedAll.length, start + windowSize);
+          if (end - start < windowSize) {
+            start = Math.max(0, end - windowSize);
+          }
+          const chartItems = sortedAll.slice(start, end);
+
+          const maxScore = chartItems.length ? Math.ceil((chartItems[0].score * 1.08) / 5000) * 5000 : 100000;
+
+          const yAxis = document.getElementById("cmp-y-axis");
+          yAxis.innerHTML = "";
+          [1, 0.75, 0.5, 0.25, 0].forEach((ratio) => {
+            const span = document.createElement("span");
+            const val = Math.round(maxScore * ratio);
+            span.textContent = val.toLocaleString();
+            yAxis.appendChild(span);
+          });
+
+          const plot = document.getElementById("cmp-plot-area");
+          const xLabels = document.getElementById("cmp-x-labels");
+          plot.innerHTML = "";
+          xLabels.innerHTML = "";
+
+          const userScore = Number(userItem.score) || 1;
+          chartItems.forEach((item) => {
+            const isUser = item.id === userItem.id;
+            const col = document.createElement("div");
+            col.className = "spectrum-bar-col";
+
+            const bar = document.createElement("div");
+            bar.className = "spectrum-bar" + (isUser ? " user-highlight" : "");
+            const pct = Math.max(8, Math.round((item.score / maxScore) * 100));
+            bar.style.height = pct + "%";
+
+            let barColor = "#64748b";
+            let tierTag = "하위";
+            if (isUser) {
+              barColor = "#e040fb";
+              tierTag = "내 PC";
+            } else if (item.score > userScore * 1.15) {
+              barColor = "#38bdf8";
+              tierTag = "상위";
+            } else if (item.score >= userScore * 0.85) {
+              barColor = "#34d399";
+              tierTag = "동급";
+            }
+
+            bar.style.backgroundColor = barColor;
+            bar.title = "[" + tierTag + "] " + item.name + " : " + Number(item.score).toLocaleString();
+
+            col.appendChild(bar);
+            plot.appendChild(col);
+
+            const xl = document.createElement("span");
+            xl.className = "chart-x-label";
+            const rawName = (item.aliases && item.aliases[0]) ? item.aliases[0] : (item.name || "");
+            const cleanShort = rawName
+              .replace(/^AMD\s+Ryzen\s+\d+\s+/i, "")
+              .replace(/^Ryzen\s+\d+\s+/i, "")
+              .replace(/^Intel\s+Core\s+/i, "")
+              .replace(/^Core\s+/i, "")
+              .replace(/^NVIDIA\s+GeForce\s+/i, "")
+              .replace(/^GeForce\s+/i, "")
+              .replace(/^AMD\s+Radeon\s+/i, "")
+              .replace(/^Radeon\s+/i, "")
+              .replace(/\s+Laptop\s+GPU$/i, " LT")
+              .trim();
+            xl.textContent = (isUser ? "★ " : "") + cleanShort;
+            xl.title = item.name;
+            if (isUser) xl.style.color = "var(--주색)";
+            xLabels.appendChild(xl);
+          });
+        }
+
+        function renderBenchmarkAnalysis() {
+          if (!benchmarksData || !window.BenchmarkEngine) return;
+          const spec = getFormSpec();
+          const analysis = window.BenchmarkEngine.analyzeSpec(spec, benchmarksData);
+          const cpuItem = analysis.cpuMatch.item;
+          const gpuItem = analysis.gpuMatch.item;
+
+          // CPU-Z 인스펙터 필드 동기화
+          document.getElementById("cpuz-cpu-name").textContent = spec.cpuName || cpuItem.name;
+          document.getElementById("cpuz-cpu-brand").textContent = cpuItem.brand + " · " + (cpuItem.tier || "");
+          document.getElementById("cpuz-cpu-threads").textContent =
+            (cpuItem.cores || "-") + " Cores / " + (spec.cpuThreads || cpuItem.threads || "-") + " Threads";
+          document.getElementById("cpuz-cpu-cache").textContent =
+            (cpuItem.cacheMb || "-") + " MB · Boost " + (cpuItem.boostGhz || "-") + " GHz";
+          document.getElementById("cpuz-os-name").textContent = currentOsName || "Windows";
+          document.getElementById("cpuz-source-type").textContent = currentSourceType;
+
+          document.getElementById("cpuz-gpu-name").textContent = spec.gpuName || gpuItem.name;
+          document.getElementById("cpuz-gpu-brand").textContent = gpuItem.brand + " · " + (gpuItem.tier || "");
+          document.getElementById("cpuz-gpu-vram").textContent = (spec.gpuVramGb || gpuItem.vramGb || "-") + " GB";
+          document.getElementById("cpuz-gpu-clock").textContent = (gpuItem.boostGhz || "-") + " GHz";
+
+          renderMemorySlotsUI(spec.ramGb);
+
+          // Compare 탭 요약 & 점수표 & 차트 & 비교표
+          const updatedPill = document.getElementById("benchmark-updated-pill");
+          if (updatedPill) {
+            updatedPill.textContent = (benchmarksData.updatedAt || "2026-11") + " 기준";
+          }
+          document.getElementById("bento-total-score").textContent = Number(analysis.totalScore || 0).toLocaleString();
+          document.getElementById("bento-tier-label").textContent = analysis.tier ? analysis.tier.label : "게이밍 PC";
+          document.getElementById("bento-target-res").textContent =
+            "권장 해상도: " + (analysis.tier && analysis.tier.targetRes ? analysis.tier.targetRes : "1080p");
+          document.getElementById("bento-spec-summary").textContent =
+            (spec.cpuName || cpuItem.name) + " · " + (spec.gpuName || gpuItem.name) + " · " + spec.ramGb + "GB";
+
+          document.getElementById("bento-cpu-ratio").textContent = analysis.vsMainstream.cpuRatioText;
+          document.getElementById("bento-gpu-ratio").textContent =
+            "GPU 주류 대비 " + analysis.vsMainstream.gpuRatioText;
+
+          document.getElementById("bento-bottleneck-status").textContent = analysis.bottleneck.status;
+          document.getElementById("bento-bottleneck-msg").textContent = analysis.bottleneck.message;
+          document.getElementById("bento-match-note").textContent =
+            "CPU: " + analysis.cpuMatch.note + " / GPU: " + analysis.gpuMatch.note;
+
+          // 내 스펙 기준 점수 산출표 렌더링 (K 단위 없음)
+          const breakdownBody = document.getElementById("score-breakdown-body");
+          if (breakdownBody) {
+            breakdownBody.innerHTML = "";
+            const cpuScoreVal = Number(cpuItem.score || 0);
+            const gpuScoreVal = Number(gpuItem.score || 0);
+            const ramGbNum = Number(spec.ramGb) || 16;
+            const breakdownRows = [
+              {
+                part: "CPU",
+                model: spec.cpuName || cpuItem.name,
+                detail: (cpuItem.cores || "-") + "코어 / " + (spec.cpuThreads || cpuItem.threads || "-") + "스레드 · " + (cpuItem.boostGhz || "-") + " GHz",
+                weight: "40%",
+                scoreText: cpuScoreVal.toLocaleString() + " 점"
+              },
+              {
+                part: "GPU",
+                model: spec.gpuName || gpuItem.name,
+                detail: "VRAM " + (spec.gpuVramGb || gpuItem.vramGb || "-") + " GB · " + (gpuItem.boostGhz || "-") + " GHz",
+                weight: "60%",
+                scoreText: gpuScoreVal.toLocaleString() + " 점"
+              },
+              {
+                part: "RAM",
+                model: "시스템 메모리",
+                detail: ramGbNum + " GB 장착",
+                weight: "균형 진단",
+                scoreText: (ramGbNum >= 32 ? "최적 (32GB+)" : ramGbNum >= 16 ? "권장 (16GB)" : "보강 필요 (" + ramGbNum + "GB)")
+              },
+              {
+                part: "종합 점수",
+                model: "내 PC 스펙 기준 산출 점수",
+                detail: analysis.tier ? analysis.tier.label : "게이밍 PC",
+                weight: "합산 (4:6)",
+                scoreText: Number(analysis.totalScore || 0).toLocaleString() + " 점",
+                isTotal: true
+              }
+            ];
+            breakdownRows.forEach((r) => {
+              const tr = document.createElement("tr");
+              if (r.isTotal) tr.className = "is-user-row";
+              [r.part, r.model, r.detail, r.weight, r.scoreText].forEach((val) => {
+                const td = document.createElement("td");
+                td.textContent = val;
+                tr.appendChild(td);
+              });
+              breakdownBody.appendChild(tr);
+            });
+          }
+
+          renderCompareBarChart(analysis, spec);
+
+          const tbody = document.getElementById("compare-table-body");
+          tbody.innerHTML = "";
+          (analysis.comparisonRows || []).forEach((row) => {
+            const tr = document.createElement("tr");
+            if (row.isUser) tr.className = "is-user-row";
+
+            const cells = [
+              row.badge || (row.isUser ? "내 PC" : "기준"),
+              row.label,
+              row.cores != null ? String(row.cores) : "-",
+              row.threads != null ? String(row.threads) : "-",
+              row.cacheOrVram || "-",
+              row.boostGhz != null ? String(row.boostGhz) + " GHz" : "-",
+              row.score != null ? Number(row.score).toLocaleString() : "-"
+            ];
+
+            cells.forEach((val) => {
+              const td = document.createElement("td");
+              td.textContent = val;
+              tr.appendChild(td);
+            });
+            tbody.appendChild(tr);
+          });
+        }
+
+        const cmpGpuBtn = document.getElementById("cmp-toggle-gpu");
+        const cmpCpuBtn = document.getElementById("cmp-toggle-cpu");
+
+        cmpGpuBtn.addEventListener("click", () => {
+          cmpChartMode = "gpu";
+          cmpGpuBtn.classList.add("active");
+          cmpCpuBtn.classList.remove("active");
+          renderBenchmarkAnalysis();
+        });
+
+        cmpCpuBtn.addEventListener("click", () => {
+          cmpChartMode = "cpu";
+          cmpCpuBtn.classList.add("active");
+          cmpGpuBtn.classList.remove("active");
+          renderBenchmarkAnalysis();
+        });
+
+        // 4. 실시간 하드웨어 점유율 모니터 (/api/system)
+        function renderPieAndList(partKey, items, limit, totalLabelText) {
+          const ol = document.getElementById(partKey + "-list");
+          const pie = document.getElementById(partKey + "-pie");
+          const pieLabel = document.getElementById(partKey + "-pie-label");
+
+          ol.innerHTML = "";
+          const sliced = (items || []).slice(0, limit);
+
+          const rawValues = sliced.map((it, idx) => {
+            const v = Number(it.percent);
+            return !isNaN(v) && v > 0 ? v : Math.max(2, 15 - idx * 3);
+          });
+          const sumValues = rawValues.reduce((a, b) => a + b, 0) || 1;
+          const scale = sumValues > 88 ? 88 / sumValues : 82 / sumValues;
+
+          let currentAngle = 0;
+          const stops = [];
+
+          sliced.forEach((item, idx) => {
+            const color = SLICE_COLORS[idx % SLICE_COLORS.length];
+            const share = Math.max(4, Math.round(rawValues[idx] * scale));
+            const nextAngle = Math.min(100, currentAngle + share);
+            stops.push(color + " " + currentAngle + "% " + nextAngle + "%");
+            currentAngle = nextAngle;
+
+            const li = document.createElement("li");
+            const row = document.createElement("div");
+            row.className = "proc-row";
+
+            const nameWrap = document.createElement("div");
+            nameWrap.className = "proc-name-wrap";
+
+            const dot = document.createElement("span");
+            dot.className = "color-dot";
+            dot.style.backgroundColor = color;
+
+            const nameSpan = document.createElement("span");
+            nameSpan.className = "proc-name";
+            nameSpan.title = item.name;
+            nameSpan.textContent = item.name;
+
+            nameWrap.appendChild(dot);
+            nameWrap.appendChild(nameSpan);
+
+            const usageSpan = document.createElement("span");
+            usageSpan.className = "proc-usage";
+            usageSpan.textContent = item.usage;
+
+            row.appendChild(nameWrap);
+            row.appendChild(usageSpan);
+            li.appendChild(row);
+            ol.appendChild(li);
+          });
+
+          if (currentAngle < 100) {
+            stops.push("rgba(255, 255, 255, 0.08) " + currentAngle + "% 100%");
+          }
+
+          if (pie) {
+            pie.style.background = "conic-gradient(" + stops.join(", ") + ")";
+          }
+          if (pieLabel && totalLabelText) {
+            pieLabel.textContent = totalLabelText;
+          }
+        }
+
+        function renderRamSticks(sticks) {
+          const container = document.getElementById("ram-sticks-list");
+          if (!sticks || sticks.length === 0) return;
+          latestRamSticks = sticks;
+          container.innerHTML = "";
+          sticks.forEach((stick, idx) => {
+            const chip = document.createElement("div");
+            chip.className = "ram-stick-chip";
+
+            const left = document.createElement("span");
+            left.textContent = stick.label || ("RAM " + (idx + 1));
+
+            const right = document.createElement("span");
+            right.textContent = stick.capacity + (stick.speed ? " · " + stick.speed : "");
+
+            chip.appendChild(left);
+            chip.appendChild(right);
+            container.appendChild(chip);
+          });
+          renderMemorySlotsUI(getFormSpec().ramGb);
+        }
+
+        function updateAllCharts(data) {
+          const ramPctMatch = (data.specs.ramTotalUsage || "").match(/\((\d+)%\)/);
+          const ramPctText = ramPctMatch ? ramPctMatch[1] + "%" : "";
+
+          renderPieAndList("cpu", data.top.cpu, rankLimit, data.specs.cpuTotalUsage);
+          renderPieAndList("gpu", data.top.gpu, rankLimit, data.specs.gpuTotalUsage);
+          renderPieAndList("ram", data.top.ram, rankLimit, ramPctText);
+        }
+
+        async function fetchSystemData() {
+          const statusEl = document.getElementById("status-text");
+          statusEl.textContent = "측정 중...";
+          try {
+            const res = await fetch("/api/system");
+            if (!res.ok) throw new Error("HTTP " + res.status);
+            const data = await res.json();
+            lastData = data;
+
+            document.getElementById("spec-cpu").textContent = data.specs.cpu;
+            document.getElementById("spec-gpu").textContent = data.specs.gpu;
+            document.getElementById("spec-ram").textContent = data.specs.ram;
+            document.getElementById("spec-os").textContent = data.specs.os;
+
+            document.getElementById("cpuz-cpu-usage").textContent = data.specs.cpuTotalUsage;
+            document.getElementById("cpuz-gpu-usage").textContent = data.specs.gpuTotalUsage;
+            document.getElementById("cpuz-ram-usage").textContent = data.specs.ramTotalUsage;
+
+            document.getElementById("cpu-caption").textContent = data.specs.cpuShort || data.specs.cpu;
+            document.getElementById("cpu-usage-badge").textContent = "전체 " + data.specs.cpuTotalUsage;
+            document.getElementById("gpu-caption").textContent = data.specs.gpuShort || data.specs.gpu;
+            document.getElementById("gpu-usage-badge").textContent = "사용 " + data.specs.gpuTotalUsage;
+            document.getElementById("ram-caption").textContent =
+              "장착 " + (data.specs.ramSticks ? data.specs.ramSticks.length : 1) + "개";
+            document.getElementById("ram-usage-badge").textContent = data.specs.ramTotalUsage;
+
+            renderRamSticks(data.specs.ramSticks);
+            updateAllCharts(data);
+            statusEl.textContent = "최근 갱신: " + data.timestamp;
+
+            if (!currentSpec.cpuName && !currentSpec.gpuName && benchmarksData) {
+              const ramNumMatch = (data.specs.ram || "").match(/(\d+(?:\.\d+)?)\s*GB/i);
+              const vramMatch = (data.specs.gpu || "").match(/VRAM\s*\d+\s*MB\s*\/\s*(\d+)\s*MB/i);
+              const threadsMatch = (data.specs.cpu || "").match(/\((\d+)\s*스레드/i);
+              applySpec({
+                cpuName: data.specs.cpuShort || data.specs.cpu,
+                cpuThreads: threadsMatch ? Number(threadsMatch[1]) : navigator.hardwareConcurrency || 16,
+                gpuName: data.specs.gpuShort || data.specs.gpu,
+                gpuVramGb: vramMatch ? Math.round((Number(vramMatch[1]) / 1024) * 10) / 10 : 8,
+                ramGb: ramNumMatch ? Math.round(Number(ramNumMatch[1])) : 16,
+                osName: data.specs.os
+              }, "system-api");
+            }
+          } catch (err) {
+            statusEl.textContent = "대기 중";
+          }
+        }
+
+        document.getElementById("refresh-btn").addEventListener("click", fetchSystemData);
+
+        document.getElementById("filter-form").addEventListener("submit", () => {
+          const val = parseInt(document.getElementById("rank-limit-input").value, 10);
+          if (!isNaN(val) && val >= 1 && val <= 5) {
+            rankLimit = val;
+          }
+          const checkboxes = document.querySelectorAll('input[name="part"]');
+          checkboxes.forEach((cb) => {
+            const col = document.getElementById("col-" + cb.value);
+            if (col) col.style.display = cb.checked ? "flex" : "none";
+          });
+          if (lastData) {
+            updateAllCharts(lastData);
+          }
+        });
+
+        // 5. 초기화 부트스트랩 (spec-setup.html에서 전달된 스펙 또는 저장된 DB 스펙 로드)
+        async function initDashboard() {
+          refreshDbStatus();
+          try {
+            const res = await fetch("../data/benchmarks.json");
+            if (res.ok) {
+              benchmarksData = await res.json();
+            }
+          } catch (err) {
+            console.error("benchmarks.json load failed:", err);
+          }
+
+          let activeSpec = null;
+          try {
+            const rawSession = sessionStorage.getItem("hw_active_spec_" + userId);
+            if (rawSession) activeSpec = JSON.parse(rawSession);
+          } catch (e) {}
+
+          if (!activeSpec && window.AppDB) {
+            const saved = await window.AppDB.loadUserSpec(userId);
+            if (saved && saved.ok && saved.spec) {
+              activeSpec = saved.spec;
+            }
+          }
+
+          if (!activeSpec && window.SpecDetector) {
+            activeSpec = window.SpecDetector.detectBrowserSpecs();
+          }
+
+          if (activeSpec && benchmarksData) {
+            applySpec(activeSpec, activeSpec.sourceType || "browser");
+          }
+
+          fetchSystemData();
+          setInterval(fetchSystemData, 5000);
+        }
+
+        initDashboard();
+      })();
+    </script>
+  </body>
+</html>

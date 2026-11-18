@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="THE SPEC BENCH — 내 PC 스펙 가져오기 및 DB 저장">
+    <title>THE SPEC BENCH · 스펙 가져오기</title>
+    <link rel="stylesheet" href="../css/style.css">
+  </head>
+  <body>
+    <div class="dashboard-shell">
+      <!-- 상단 바 -->
+      <header class="top-bar">
+        <div class="brand-wrap">
+          <h1>THE SPEC BENCH</h1>
+          <p class="brand-subtitle">Step 1 · 내 PC 스펙 가져오기 및 DB 저장</p>
+        </div>
+
+        <div class="top-actions">
+          <span id="user-badge" class="user-pill">접속 중</span>
+          <span id="db-status-badge" class="status-pill fallback">로컬 폴백(Supabase 미연결)</span>
+          <button type="button" class="box-btn small" id="theme-toggle-btn">라이트 모드</button>
+          <button type="button" class="icon-btn" id="open-db-config-btn" aria-label="Supabase DB 설정" title="Supabase DB 설정">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.6.85 1 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+          </button>
+          <a href="../index.html" class="box-btn small">로그인 화면</a>
+        </div>
+      </header>
+
+      <main>
+        <!-- 스펙 가져오기 & DB 저장 전용 창 -->
+        <section id="spec-input-section" class="spec-import-card" aria-label="스펙 입력 및 DxDiag 가져오기">
+          <div class="section-header">
+            <div>
+              <h2>내 PC 스펙 가져오기 &amp; DB 저장</h2>
+              <p class="section-subtitle">DxDiag.txt 업로드, WebGL 자동 감지 또는 추천 모델 선택 후 다음 창(인스펙터)에서 상세 정보를 확인합니다.</p>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+              <button type="button" class="box-btn small is-hidden" id="load-saved-spec-btn">저장된 스펙 불러오기</button>
+              <span class="status-pill" id="benchmark-updated-pill">2026-11 기준</span>
+            </div>
+          </div>
+
+          <div class="spec-import-grid">
+            <!-- 좌측: 3단계 가이드 + 드래그앤드롭 + WebGL 감지 -->
+            <div>
+              <ol class="dxdiag-steps">
+                <li><strong>Win + R</strong> 키를 눌러 실행 창을 엽니다.</li>
+                <li><code>dxdiag</code> 를 입력해 DirectX 진단 도구를 엽니다.</li>
+                <li>하단 <strong>[모든 정보 저장]</strong> 으로 저장한 <code>DxDiag.txt</code> 를 업로드하세요.</li>
+              </ol>
+
+              <div class="dxdiag-dropzone" id="dxdiag-dropzone">
+                <p style="margin-bottom: 4px; font-weight: 700; font-size: 0.9rem;">DxDiag.txt 드래그 앤 드롭</p>
+                <p class="section-subtitle">한국어·영어 Windows 형식 모두 자동 파싱</p>
+                <div class="dxdiag-actions">
+                  <input type="file" id="dxdiag-file-input" class="dxdiag-file-input" accept=".txt,text/plain">
+                  <label for="dxdiag-file-input" class="box-btn primary small">DxDiag.txt 선택</label>
+                  <button type="button" class="box-btn small" id="detect-browser-btn">WebGL 자동 감지</button>
+                </div>
+              </div>
+
+              <p class="form-feedback" id="detect-feedback" style="text-align: left;"></p>
+            </div>
+
+            <!-- 우측: 추천 CPU/GPU/RAM 선택 및 DB 저장 폼 -->
+            <div>
+              <p class="spec-hint">감지된 사양과 가장 가까운 2026-11 벤치마크 추천 모델(★추천)을 우선 정렬합니다.</p>
+              <form id="spec-save-form">
+                <div class="spec-form-grid">
+                  <div class="spec-field full">
+                    <label for="select-cpu">추천 CPU 선택</label>
+                    <select id="select-cpu" required>
+                      <option value="">불러오는 중...</option>
+                    </select>
+                  </div>
+
+                  <div class="spec-field full">
+                    <label for="select-gpu">추천 GPU 선택</label>
+                    <select id="select-gpu" required>
+                      <option value="">불러오는 중...</option>
+                    </select>
+                  </div>
+
+                  <div class="spec-field full">
+                    <label for="input-cpu-custom">적용 CPU 모델명</label>
+                    <input type="text" id="input-cpu-custom" placeholder="예: Intel Core i5-13450HX" required>
+                  </div>
+
+                  <div class="spec-field full">
+                    <label for="input-gpu-custom">적용 GPU 모델명</label>
+                    <input type="text" id="input-gpu-custom" placeholder="예: NVIDIA GeForce RTX 5050 Laptop GPU" required>
+                  </div>
+
+                  <div class="spec-field full">
+                    <label for="select-ram">시스템 RAM</label>
+                    <select id="select-ram" required>
+                      <option value="8">8 GB</option>
+                      <option value="16" selected>16 GB</option>
+                      <option value="32">32 GB</option>
+                      <option value="64">64 GB</option>
+                    </select>
+                  </div>
+
+                  <div class="spec-field">
+                    <label for="input-cpu-threads">CPU 스레드</label>
+                    <input type="number" id="input-cpu-threads" min="1" max="256" value="16" title="CPU 스레드 수" required>
+                  </div>
+
+                  <div class="spec-field">
+                    <label for="input-gpu-vram">GPU VRAM (GB)</label>
+                    <input type="number" id="input-gpu-vram" min="1" max="128" step="0.5" value="8" title="GPU VRAM (GB)" required>
+                  </div>
+                </div>
+
+                <div class="spec-form-actions">
+                  <button type="button" class="box-btn small" id="apply-spec-btn">저장 없이 인스펙터 열기</button>
+                  <button type="submit" class="box-btn primary small" id="save-spec-btn">DB에 저장 후 인스펙터 열기</button>
+                  <span class="form-feedback" id="save-spec-feedback" style="margin: 0; text-align: left;"></span>
+                </div>
+              </form>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="page-footer">
+        <span>THE SPEC BENCH · Step 1: Spec Import &amp; Storage</span>
+        <a href="https://supabase.com/docs" target="_blank" rel="noopener noreferrer">Supabase REST API 가이드</a>
+      </footer>
+
+      <!-- Supabase 설정 모달 -->
+      <div class="modal-overlay" id="db-config-modal" role="dialog" aria-modal="true" aria-labelledby="db-config-title">
+        <div class="modal-card">
+          <h2 id="db-config-title">Supabase Cloud 설정</h2>
+          <p class="admin-hint">
+            URL과 Anon Key를 입력하면 클라우드 DB에 스펙을 동기화합니다. 비워두면 로컬 폴백으로 동작합니다.
+            <a href="https://supabase.com/dashboard" target="_blank" rel="noopener noreferrer">Supabase 대시보드</a>
+          </p>
+
+          <form id="db-config-form">
+            <div class="form-row">
+              <label for="db-url-input">Project URL</label>
+              <input type="url" id="db-url-input" name="url" placeholder="https://xxxx.supabase.co">
+            </div>
+
+            <div class="form-row">
+              <label for="db-anon-input">Anon Key</label>
+              <input type="text" id="db-anon-input" name="anonKey" placeholder="eyJhbGciOi...">
+            </div>
+
+            <p class="form-feedback" id="db-config-feedback"></p>
+
+            <div class="modal-actions">
+              <button type="submit" class="box-btn primary" id="save-db-config-btn">저장</button>
+              <button type="button" class="box-btn" id="clear-db-config-btn">초기화</button>
+              <button type="button" class="box-btn" id="close-db-config-btn">닫기</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/supabase-client.js"></script>
+    <script src="../js/spec-detector.js"></script>
+    <script src="../js/benchmark-compare.js"></script>
+    <script>
+      (function () {
+        const params = new URLSearchParams(window.location.search);
+        const userId = params.get("id") || "admin";
+        const userName = params.get("name") || userId;
+        document.getElementById("user-badge").textContent = "접속자: " + userName;
+
+        const dbStatusBadge = document.getElementById("db-status-badge");
+        const themeToggleBtn = document.getElementById("theme-toggle-btn");
+        const dbConfigModal = document.getElementById("db-config-modal");
+
+        let benchmarksData = null;
+        let currentSourceType = "manual";
+        let currentOsName = "Windows";
+        let savedDbSpec = null;
+
+        // 1. 라이트/다크 테마 토글
+        function applyTheme(theme) {
+          const isLight = theme === "light";
+          document.body.classList.toggle("라이트테마", isLight);
+          themeToggleBtn.textContent = isLight ? "다크 모드" : "라이트 모드";
+        }
+        applyTheme(localStorage.getItem("hw_theme") || "dark");
+
+        themeToggleBtn.addEventListener("click", () => {
+          const next = document.body.classList.contains("라이트테마") ? "dark" : "light";
+          localStorage.setItem("hw_theme", next);
+          applyTheme(next);
+        });
+
+        // 2. Supabase 연결 상태 및 설정 모달
+        function refreshDbStatus() {
+          if (!window.AppDB) return;
+          const configured = window.AppDB.isConfigured();
+          dbStatusBadge.textContent = window.AppDB.getModeLabel();
+          dbStatusBadge.classList.toggle("cloud", configured);
+          dbStatusBadge.classList.toggle("fallback", !configured);
+        }
+
+        document.getElementById("open-db-config-btn").addEventListener("click", () => {
+          const cfg = window.AppDB ? window.AppDB.getConfig() : { url: "", anonKey: "" };
+          document.getElementById("db-url-input").value = cfg.url || "";
+          document.getElementById("db-anon-input").value = cfg.anonKey || "";
+          document.getElementById("db-config-feedback").textContent = "";
+          dbConfigModal.classList.add("active");
+          document.getElementById("db-url-input").focus();
+        });
+
+        document.getElementById("close-db-config-btn").addEventListener("click", () => {
+          dbConfigModal.classList.remove("active");
+        });
+
+        document.getElementById("clear-db-config-btn").addEventListener("click", () => {
+          if (window.AppDB) window.AppDB.saveConfig("", "");
+          document.getElementById("db-url-input").value = "";
+          document.getElementById("db-anon-input").value = "";
+          const fb = document.getElementById("db-config-feedback");
+          fb.className = "form-feedback success";
+          fb.textContent = "초기화 완료: 로컬 폴백 모드로 전환되었습니다.";
+          refreshDbStatus();
+        });
+
+        document.getElementById("db-config-form").addEventListener("submit", (event) => {
+          event.preventDefault();
+          const url = document.getElementById("db-url-input").value.trim();
+          const anonKey = document.getElementById("db-anon-input").value.trim();
+          if (window.AppDB) window.AppDB.saveConfig(url, anonKey);
+          refreshDbStatus();
+          const fb = document.getElementById("db-config-feedback");
+          fb.className = "form-feedback success";
+          fb.textContent = window.AppDB && window.AppDB.isConfigured()
+            ? "Supabase Cloud 설정이 저장되었습니다."
+            : "로컬 폴백 설정이 저장되었습니다.";
+        });
+
+        // 3. 스펙 폼 조작 및 인스펙터 창으로 이동
+        function getFormSpec() {
+          return {
+            cpuName: document.getElementById("input-cpu-custom").value.trim(),
+            cpuThreads: Number(document.getElementById("input-cpu-threads").value) || 16,
+            gpuName: document.getElementById("input-gpu-custom").value.trim(),
+            gpuVramGb: Number(document.getElementById("input-gpu-vram").value) || 8,
+            ramGb: Number(document.getElementById("select-ram").value) || 16,
+            osName: currentOsName,
+            sourceType: currentSourceType,
+            updatedAt: new Date().toISOString()
+          };
+        }
+
+        function goToDashboard(specPayload) {
+          sessionStorage.setItem("hw_active_spec_" + userId, JSON.stringify(specPayload));
+          window.location.href =
+            "dashboard.html?id=" + encodeURIComponent(userId) + "&name=" + encodeURIComponent(userName);
+        }
+
+        function populateSelectOptions(detected) {
+          if (!benchmarksData || !window.SpecDetector) return;
+          const rec = window.SpecDetector.getRecommendedOptions(detected || {}, benchmarksData);
+
+          const cpuSelect = document.getElementById("select-cpu");
+          const gpuSelect = document.getElementById("select-gpu");
+          const ramSelect = document.getElementById("select-ram");
+
+          cpuSelect.innerHTML = "";
+          rec.cpuOptions.forEach((cpu) => {
+            const opt = document.createElement("option");
+            opt.value = cpu.name;
+            opt.dataset.threads = String(cpu.threads || 16);
+            opt.textContent = (cpu.recommended ? "★추천 | " : "") + cpu.name + " (" + cpu.threads + "T · " + Number(cpu.score).toLocaleString() + ")";
+            cpuSelect.appendChild(opt);
+          });
+
+          gpuSelect.innerHTML = "";
+          rec.gpuOptions.forEach((gpu) => {
+            const opt = document.createElement("option");
+            opt.value = gpu.name;
+            opt.dataset.vram = String(gpu.vramGb || 8);
+            opt.textContent = (gpu.recommended ? "★추천 | " : "") + gpu.name + " (" + gpu.vramGb + "GB · " + Number(gpu.score).toLocaleString() + ")";
+            gpuSelect.appendChild(opt);
+          });
+
+          ramSelect.innerHTML = "";
+          (rec.ramOptions || [8, 16, 32, 64]).forEach((gb) => {
+            const opt = document.createElement("option");
+            opt.value = String(gb);
+            opt.textContent = gb + " GB";
+            ramSelect.appendChild(opt);
+          });
+        }
+
+        function applySpecToForm(spec, sourceType) {
+          if (sourceType) currentSourceType = sourceType;
+          if (spec.osName) currentOsName = spec.osName;
+
+          if (benchmarksData && window.SpecDetector) {
+            populateSelectOptions(spec);
+          }
+
+          const cpuSelect = document.getElementById("select-cpu");
+          const gpuSelect = document.getElementById("select-gpu");
+          const ramSelect = document.getElementById("select-ram");
+
+          let matchedCpuName = spec.cpuName || "";
+          let matchedGpuName = spec.gpuName || "";
+          let threadsVal = spec.cpuThreads || 16;
+          let vramVal = spec.gpuVramGb || 8;
+
+          if (benchmarksData && window.BenchmarkEngine) {
+            const cpuRes = window.BenchmarkEngine.matchCpu(spec.cpuName || "", benchmarksData);
+            const gpuRes = window.BenchmarkEngine.matchGpu(spec.gpuName || "", benchmarksData);
+            if (cpuRes && cpuRes.item) {
+              cpuSelect.value = cpuRes.item.name;
+              if (!matchedCpuName) matchedCpuName = cpuRes.item.name;
+              if (!spec.cpuThreads) threadsVal = cpuRes.item.threads || 16;
+            }
+            if (gpuRes && gpuRes.item) {
+              gpuSelect.value = gpuRes.item.name;
+              if (!matchedGpuName) matchedGpuName = gpuRes.item.name;
+              if (!spec.gpuVramGb) vramVal = gpuRes.item.vramGb || 8;
+            }
+          }
+
+          document.getElementById("input-cpu-custom").value = matchedCpuName || cpuSelect.value;
+          document.getElementById("input-gpu-custom").value = matchedGpuName || gpuSelect.value;
+          document.getElementById("input-cpu-threads").value = String(threadsVal);
+          document.getElementById("input-gpu-vram").value = String(vramVal);
+
+          const ramVal = Number(spec.ramGb) || 16;
+          const closestRam = [8, 16, 32, 64].reduce((prev, curr) =>
+            Math.abs(curr - ramVal) < Math.abs(prev - ramVal) ? curr : prev
+          );
+          ramSelect.value = String(closestRam);
+        }
+
+        document.getElementById("select-cpu").addEventListener("change", (event) => {
+          const sel = event.target;
+          const opt = sel.options[sel.selectedIndex];
+          document.getElementById("input-cpu-custom").value = sel.value;
+          if (opt && opt.dataset.threads) {
+            document.getElementById("input-cpu-threads").value = opt.dataset.threads;
+          }
+          currentSourceType = "manual";
+        });
+
+        document.getElementById("select-gpu").addEventListener("change", (event) => {
+          const sel = event.target;
+          const opt = sel.options[sel.selectedIndex];
+          document.getElementById("input-gpu-custom").value = sel.value;
+          if (opt && opt.dataset.vram) {
+            document.getElementById("input-gpu-vram").value = opt.dataset.vram;
+          }
+          currentSourceType = "manual";
+        });
+
+        document.getElementById("select-ram").addEventListener("change", () => {
+          currentSourceType = "manual";
+        });
+
+        document.getElementById("apply-spec-btn").addEventListener("click", () => {
+          const spec = getFormSpec();
+          if (!spec.cpuName && document.getElementById("select-cpu").value) {
+            spec.cpuName = document.getElementById("select-cpu").value;
+          }
+          if (!spec.gpuName && document.getElementById("select-gpu").value) {
+            spec.gpuName = document.getElementById("select-gpu").value;
+          }
+          goToDashboard(spec);
+        });
+
+        async function handleDxDiagFile(file) {
+          const fb = document.getElementById("detect-feedback");
+          if (!file) return;
+          try {
+            let text = await file.text();
+            if (text.includes("\uFFFD")) {
+              const buf = await file.arrayBuffer();
+              text = new TextDecoder("euc-kr").decode(buf);
+            }
+            const parsed = window.SpecDetector.parseDxDiagText(text);
+            if (!parsed.ok) {
+              fb.className = "form-feedback";
+              fb.textContent = parsed.error || "DxDiag.txt에서 사양을 찾지 못했습니다.";
+              return;
+            }
+            applySpecToForm(parsed, "dxdiag");
+            fb.className = "form-feedback success";
+            fb.textContent =
+              "DxDiag 파싱 완료: " +
+              (parsed.cpuName || "CPU 미상") + " / " +
+              (parsed.gpuName || "GPU 미상") + " / " +
+              (parsed.ramGb || "?") + "GB RAM — 아래 버튼으로 인스펙터를 여세요.";
+          } catch (err) {
+            fb.className = "form-feedback";
+            fb.textContent = "파일 읽기 오류: " + err.message;
+          }
+        }
+
+        const dxdiagFileInput = document.getElementById("dxdiag-file-input");
+        const dxdiagDropzone = document.getElementById("dxdiag-dropzone");
+
+        dxdiagFileInput.addEventListener("change", (event) => {
+          const file = event.target.files && event.target.files[0];
+          handleDxDiagFile(file);
+        });
+
+        dxdiagDropzone.addEventListener("dragover", (event) => {
+          event.preventDefault();
+          dxdiagDropzone.classList.add("drag-over");
+        });
+
+        dxdiagDropzone.addEventListener("dragleave", () => {
+          dxdiagDropzone.classList.remove("drag-over");
+        });
+
+        dxdiagDropzone.addEventListener("drop", (event) => {
+          event.preventDefault();
+          dxdiagDropzone.classList.remove("drag-over");
+          const file = event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files[0];
+          handleDxDiagFile(file);
+        });
+
+        document.getElementById("detect-browser-btn").addEventListener("click", () => {
+          const fb = document.getElementById("detect-feedback");
+          if (!window.SpecDetector) return;
+          const detected = window.SpecDetector.detectBrowserSpecs();
+          applySpecToForm(detected, "browser");
+          fb.className = "form-feedback success";
+          fb.textContent =
+            "WebGL 감지 완료: GPU=" + (detected.gpuName || "미확인") +
+            ", 스레드=" + (detected.cpuThreads || "?") +
+            ", RAM=" + (detected.ramGb ? detected.ramGb + "GB" : "비공개") +
+            " — 아래 버튼으로 인스펙터를 여세요.";
+        });
+
+        document.getElementById("load-saved-spec-btn").addEventListener("click", () => {
+          if (!savedDbSpec) return;
+          goToDashboard(savedDbSpec);
+        });
+
+        document.getElementById("spec-save-form").addEventListener("submit", async (event) => {
+          event.preventDefault();
+          const fb = document.getElementById("save-spec-feedback");
+          const spec = getFormSpec();
+          if (!window.AppDB) {
+            goToDashboard(spec);
+            return;
+          }
+
+          fb.className = "form-feedback";
+          fb.textContent = "DB에 저장 중...";
+
+          const res = await window.AppDB.saveUserSpec(userId, spec);
+          if (res.ok) {
+            fb.className = "form-feedback success";
+            fb.textContent = "저장 완료! 인스펙터 창으로 이동합니다.";
+            goToDashboard(res.spec || spec);
+          } else {
+            fb.className = "form-feedback";
+            fb.textContent = res.error || "스펙 저장에 실패했습니다.";
+          }
+        });
+
+        async function initSetupPage() {
+          refreshDbStatus();
+          try {
+            const res = await fetch("../data/benchmarks.json");
+            if (res.ok) {
+              benchmarksData = await res.json();
+              document.getElementById("benchmark-updated-pill").textContent =
+                (benchmarksData.updatedAt || "2026-11") + " 기준";
+            }
+          } catch (err) {
+            console.error("benchmarks.json load failed:", err);
+          }
+
+          if (benchmarksData && window.SpecDetector) {
+            populateSelectOptions({});
+          }
+
+          if (window.AppDB) {
+            const saved = await window.AppDB.loadUserSpec(userId);
+            if (saved && saved.ok && saved.spec) {
+              savedDbSpec = saved.spec;
+              const loadBtn = document.getElementById("load-saved-spec-btn");
+              if (loadBtn) loadBtn.classList.remove("is-hidden");
+              const fb = document.getElementById("save-spec-feedback");
+              fb.className = "form-feedback success";
+              fb.textContent = "이전에 저장된 스펙이 있습니다. [저장된 스펙 불러오기]로 바로 이동할 수 있습니다.";
+            }
+          }
+        }
+
+        initSetupPage();
+      })();
+    </script>
+  </body>
+</html>

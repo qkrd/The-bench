@@ -1,0 +1,517 @@
+{
+  "updatedAt": "2026-11",
+  "tiers": [
+    {
+      "id": "entry",
+      "label": "FHD 입문 게이밍",
+      "minCpuScore": 14000,
+      "minGpuScore": 11000,
+      "minRamGb": 16,
+      "targetRes": "1080p 60Hz"
+    },
+    {
+      "id": "mainstream",
+      "label": "FHD/QHD 주류 게이밍",
+      "minCpuScore": 23000,
+      "minGpuScore": 17000,
+      "minRamGb": 16,
+      "targetRes": "1440p 144Hz"
+    },
+    {
+      "id": "high",
+      "label": "QHD 하이엔드",
+      "minCpuScore": 34000,
+      "minGpuScore": 28000,
+      "minRamGb": 32,
+      "targetRes": "1440p Ultra"
+    },
+    {
+      "id": "enthusiast",
+      "label": "4K 플래그십",
+      "minCpuScore": 44000,
+      "minGpuScore": 39000,
+      "minRamGb": 32,
+      "targetRes": "4K Ultra"
+    }
+  ],
+  "cpus": [
+    {
+      "id": "amd-ryzen-9-9950x3d",
+      "name": "AMD Ryzen 9 9950X3D",
+      "aliases": ["Ryzen 9 9950X3D", "9950X3D"],
+      "brand": "AMD",
+      "cores": 16,
+      "threads": 32,
+      "cacheMb": 128,
+      "boostGhz": 5.7,
+      "score": 70100,
+      "singleScore": 4735,
+      "tier": "enthusiast"
+    },
+    {
+      "id": "intel-core-ultra-9-285k",
+      "name": "Intel Core Ultra 9 285K",
+      "aliases": ["Core Ultra 9 285K", "Ultra 9 285K", "285K"],
+      "brand": "Intel",
+      "cores": 24,
+      "threads": 24,
+      "cacheMb": 36,
+      "boostGhz": 5.7,
+      "score": 67231,
+      "singleScore": 5087,
+      "tier": "enthusiast"
+    },
+    {
+      "id": "amd-ryzen-9-7950x3d",
+      "name": "AMD Ryzen 9 7950X3D",
+      "aliases": ["Ryzen 9 7950X3D", "7950X3D"],
+      "brand": "AMD",
+      "cores": 16,
+      "threads": 32,
+      "cacheMb": 128,
+      "boostGhz": 5.7,
+      "score": 62306,
+      "singleScore": 4144,
+      "tier": "enthusiast"
+    },
+    {
+      "id": "intel-core-ultra-7-265k",
+      "name": "Intel Core Ultra 7 265K",
+      "aliases": ["Core Ultra 7 265K", "Ultra 7 265K", "265K"],
+      "brand": "Intel",
+      "cores": 20,
+      "threads": 20,
+      "cacheMb": 30,
+      "boostGhz": 5.5,
+      "score": 58591,
+      "singleScore": 4928,
+      "tier": "enthusiast"
+    },
+    {
+      "id": "intel-core-i9-14900k",
+      "name": "Intel Core i9-14900K",
+      "aliases": ["Core i9-14900K", "i9-14900K", "14900K"],
+      "brand": "Intel",
+      "cores": 24,
+      "threads": 32,
+      "cacheMb": 36,
+      "boostGhz": 6.0,
+      "score": 58149,
+      "singleScore": 4689,
+      "tier": "enthusiast"
+    },
+    {
+      "id": "intel-core-i7-14700k",
+      "name": "Intel Core i7-14700K",
+      "aliases": ["Core i7-14700K", "i7-14700K", "14700K"],
+      "brand": "Intel",
+      "cores": 20,
+      "threads": 28,
+      "cacheMb": 33,
+      "boostGhz": 5.6,
+      "score": 51889,
+      "singleScore": 4453,
+      "tier": "enthusiast"
+    },
+    {
+      "id": "intel-core-ultra-5-245k",
+      "name": "Intel Core Ultra 5 245K",
+      "aliases": ["Core Ultra 5 245K", "Ultra 5 245K", "245K"],
+      "brand": "Intel",
+      "cores": 14,
+      "threads": 14,
+      "cacheMb": 24,
+      "boostGhz": 5.2,
+      "score": 42972,
+      "singleScore": 4709,
+      "tier": "high"
+    },
+    {
+      "id": "amd-ryzen-7-9800x3d",
+      "name": "AMD Ryzen 7 9800X3D",
+      "aliases": ["Ryzen 7 9800X3D", "9800X3D"],
+      "brand": "AMD",
+      "cores": 8,
+      "threads": 16,
+      "cacheMb": 96,
+      "boostGhz": 5.2,
+      "score": 39950,
+      "singleScore": 4420,
+      "tier": "high"
+    },
+    {
+      "id": "intel-core-i5-14600k",
+      "name": "Intel Core i5-14600K",
+      "aliases": ["Core i5-14600K", "i5-14600K", "14600K"],
+      "brand": "Intel",
+      "cores": 14,
+      "threads": 20,
+      "cacheMb": 24,
+      "boostGhz": 5.3,
+      "score": 38342,
+      "singleScore": 4263,
+      "tier": "high"
+    },
+    {
+      "id": "amd-ryzen-7-9700x",
+      "name": "AMD Ryzen 7 9700X",
+      "aliases": ["Ryzen 7 9700X", "9700X"],
+      "brand": "AMD",
+      "cores": 8,
+      "threads": 16,
+      "cacheMb": 32,
+      "boostGhz": 5.5,
+      "score": 36914,
+      "singleScore": 4642,
+      "tier": "high"
+    },
+    {
+      "id": "amd-ryzen-7-7800x3d",
+      "name": "AMD Ryzen 7 7800X3D",
+      "aliases": ["Ryzen 7 7800X3D", "7800X3D"],
+      "brand": "AMD",
+      "cores": 8,
+      "threads": 16,
+      "cacheMb": 96,
+      "boostGhz": 5.0,
+      "score": 34280,
+      "singleScore": 3759,
+      "tier": "high"
+    },
+    {
+      "id": "amd-ryzen-5-9600x",
+      "name": "AMD Ryzen 5 9600X",
+      "aliases": ["Ryzen 5 9600X", "9600X"],
+      "brand": "AMD",
+      "cores": 6,
+      "threads": 12,
+      "cacheMb": 32,
+      "boostGhz": 5.4,
+      "score": 30014,
+      "singleScore": 4569,
+      "tier": "mainstream"
+    },
+    {
+      "id": "amd-ryzen-5-7600",
+      "name": "AMD Ryzen 5 7600",
+      "aliases": ["Ryzen 5 7600", "7600"],
+      "brand": "AMD",
+      "cores": 6,
+      "threads": 12,
+      "cacheMb": 32,
+      "boostGhz": 5.1,
+      "score": 26964,
+      "singleScore": 3907,
+      "tier": "mainstream"
+    },
+    {
+      "id": "amd-ryzen-7-5700x3d",
+      "name": "AMD Ryzen 7 5700X3D",
+      "aliases": ["Ryzen 7 5700X3D", "5700X3D"],
+      "brand": "AMD",
+      "cores": 8,
+      "threads": 16,
+      "cacheMb": 96,
+      "boostGhz": 4.1,
+      "score": 26308,
+      "singleScore": 2969,
+      "tier": "mainstream"
+    },
+    {
+      "id": "intel-core-i5-13400f",
+      "name": "Intel Core i5-13400F",
+      "aliases": ["Core i5-13400F", "i5-13400F", "13400F"],
+      "brand": "Intel",
+      "cores": 10,
+      "threads": 16,
+      "cacheMb": 20,
+      "boostGhz": 4.6,
+      "score": 24872,
+      "singleScore": 3810,
+      "tier": "mainstream"
+    },
+    {
+      "id": "intel-core-i5-13450hx",
+      "name": "Intel Core i5-13450HX",
+      "aliases": ["Core i5-13450HX", "i5-13450HX", "13450HX", "13th Gen Intel(R) Core(TM) i5-13450HX"],
+      "brand": "Intel",
+      "cores": 10,
+      "threads": 16,
+      "cacheMb": 20,
+      "boostGhz": 4.6,
+      "score": 24315,
+      "singleScore": 3522,
+      "tier": "mainstream"
+    },
+    {
+      "id": "amd-ryzen-5-5600",
+      "name": "AMD Ryzen 5 5600",
+      "aliases": ["Ryzen 5 5600", "5600"],
+      "brand": "AMD",
+      "cores": 6,
+      "threads": 12,
+      "cacheMb": 32,
+      "boostGhz": 4.4,
+      "score": 21489,
+      "singleScore": 3267,
+      "tier": "entry"
+    },
+    {
+      "id": "intel-core-i5-12400f",
+      "name": "Intel Core i5-12400F",
+      "aliases": ["Core i5-12400F", "i5-12400F", "12400F"],
+      "brand": "Intel",
+      "cores": 6,
+      "threads": 12,
+      "cacheMb": 18,
+      "boostGhz": 4.4,
+      "score": 19522,
+      "singleScore": 3483,
+      "tier": "entry"
+    }
+  ],
+  "gpus": [
+    {
+      "id": "nvidia-rtx-5090",
+      "name": "NVIDIA GeForce RTX 5090",
+      "aliases": ["GeForce RTX 5090", "RTX 5090"],
+      "brand": "NVIDIA",
+      "vramGb": 32,
+      "boostGhz": 2.41,
+      "score": 39400,
+      "tier": "enthusiast"
+    },
+    {
+      "id": "nvidia-rtx-4090",
+      "name": "NVIDIA GeForce RTX 4090",
+      "aliases": ["GeForce RTX 4090", "RTX 4090"],
+      "brand": "NVIDIA",
+      "vramGb": 24,
+      "boostGhz": 2.52,
+      "score": 38016,
+      "tier": "high"
+    },
+    {
+      "id": "nvidia-rtx-5080",
+      "name": "NVIDIA GeForce RTX 5080",
+      "aliases": ["GeForce RTX 5080", "RTX 5080"],
+      "brand": "NVIDIA",
+      "vramGb": 16,
+      "boostGhz": 2.62,
+      "score": 35650,
+      "tier": "high"
+    },
+    {
+      "id": "nvidia-rtx-4080-super",
+      "name": "NVIDIA GeForce RTX 4080 SUPER",
+      "aliases": ["GeForce RTX 4080 SUPER", "RTX 4080 SUPER", "RTX 4080 Super"],
+      "brand": "NVIDIA",
+      "vramGb": 16,
+      "boostGhz": 2.55,
+      "score": 34209,
+      "tier": "high"
+    },
+    {
+      "id": "nvidia-rtx-5070-ti",
+      "name": "NVIDIA GeForce RTX 5070 Ti",
+      "aliases": ["GeForce RTX 5070 Ti", "RTX 5070 Ti"],
+      "brand": "NVIDIA",
+      "vramGb": 16,
+      "boostGhz": 2.45,
+      "score": 32330,
+      "tier": "high"
+    },
+    {
+      "id": "amd-rx-7900-xtx",
+      "name": "AMD Radeon RX 7900 XTX",
+      "aliases": ["Radeon RX 7900 XTX", "RX 7900 XTX"],
+      "brand": "AMD",
+      "vramGb": 24,
+      "boostGhz": 2.5,
+      "score": 31474,
+      "tier": "high"
+    },
+    {
+      "id": "nvidia-rtx-4070-super",
+      "name": "NVIDIA GeForce RTX 4070 SUPER",
+      "aliases": ["GeForce RTX 4070 SUPER", "RTX 4070 SUPER", "RTX 4070 Super"],
+      "brand": "NVIDIA",
+      "vramGb": 12,
+      "boostGhz": 2.48,
+      "score": 29939,
+      "tier": "high"
+    },
+    {
+      "id": "nvidia-rtx-5070",
+      "name": "NVIDIA GeForce RTX 5070",
+      "aliases": ["GeForce RTX 5070", "RTX 5070"],
+      "brand": "NVIDIA",
+      "vramGb": 12,
+      "boostGhz": 2.51,
+      "score": 28650,
+      "tier": "high"
+    },
+    {
+      "id": "amd-rx-9070-xt",
+      "name": "AMD Radeon RX 9070 XT",
+      "aliases": ["Radeon RX 9070 XT", "RX 9070 XT"],
+      "brand": "AMD",
+      "vramGb": 16,
+      "boostGhz": 2.97,
+      "score": 26926,
+      "tier": "mainstream"
+    },
+    {
+      "id": "amd-rx-9070",
+      "name": "AMD Radeon RX 9070",
+      "aliases": ["Radeon RX 9070", "RX 9070"],
+      "brand": "AMD",
+      "vramGb": 16,
+      "boostGhz": 2.52,
+      "score": 25364,
+      "tier": "mainstream"
+    },
+    {
+      "id": "amd-rx-7800-xt",
+      "name": "AMD Radeon RX 7800 XT",
+      "aliases": ["Radeon RX 7800 XT", "RX 7800 XT"],
+      "brand": "AMD",
+      "vramGb": 16,
+      "boostGhz": 2.43,
+      "score": 24478,
+      "tier": "mainstream"
+    },
+    {
+      "id": "nvidia-rtx-5060-ti",
+      "name": "NVIDIA GeForce RTX 5060 Ti",
+      "aliases": ["GeForce RTX 5060 Ti", "RTX 5060 Ti"],
+      "brand": "NVIDIA",
+      "vramGb": 16,
+      "boostGhz": 2.57,
+      "score": 22630,
+      "tier": "mainstream"
+    },
+    {
+      "id": "nvidia-rtx-5060",
+      "name": "NVIDIA GeForce RTX 5060",
+      "aliases": ["GeForce RTX 5060", "RTX 5060"],
+      "brand": "NVIDIA",
+      "vramGb": 8,
+      "boostGhz": 2.5,
+      "score": 20580,
+      "tier": "mainstream"
+    },
+    {
+      "id": "amd-rx-9060-xt",
+      "name": "AMD Radeon RX 9060 XT",
+      "aliases": ["Radeon RX 9060 XT", "RX 9060 XT"],
+      "brand": "AMD",
+      "vramGb": 16,
+      "boostGhz": 3.13,
+      "score": 20149,
+      "tier": "mainstream"
+    },
+    {
+      "id": "nvidia-rtx-4060",
+      "name": "NVIDIA GeForce RTX 4060",
+      "aliases": ["GeForce RTX 4060", "RTX 4060"],
+      "brand": "NVIDIA",
+      "vramGb": 8,
+      "boostGhz": 2.46,
+      "score": 19476,
+      "tier": "mainstream"
+    },
+    {
+      "id": "nvidia-rtx-4060-laptop",
+      "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+      "aliases": ["GeForce RTX 4060 Laptop GPU", "RTX 4060 Laptop GPU", "RTX 4060 Laptop"],
+      "brand": "NVIDIA",
+      "vramGb": 8,
+      "boostGhz": 2.37,
+      "score": 17306,
+      "tier": "mainstream"
+    },
+    {
+      "id": "nvidia-rtx-5060-laptop",
+      "name": "NVIDIA GeForce RTX 5060 Laptop GPU",
+      "aliases": ["GeForce RTX 5060 Laptop GPU", "RTX 5060 Laptop GPU", "RTX 5060 Laptop"],
+      "brand": "NVIDIA",
+      "vramGb": 8,
+      "boostGhz": 2.31,
+      "score": 16788,
+      "tier": "entry"
+    },
+    {
+      "id": "nvidia-rtx-3060",
+      "name": "NVIDIA GeForce RTX 3060",
+      "aliases": ["GeForce RTX 3060", "RTX 3060"],
+      "brand": "NVIDIA",
+      "vramGb": 12,
+      "boostGhz": 1.78,
+      "score": 16696,
+      "tier": "entry"
+    },
+    {
+      "id": "amd-rx-7600",
+      "name": "AMD Radeon RX 7600",
+      "aliases": ["Radeon RX 7600", "RX 7600"],
+      "brand": "AMD",
+      "vramGb": 8,
+      "boostGhz": 2.66,
+      "score": 16426,
+      "tier": "entry"
+    },
+    {
+      "id": "nvidia-rtx-5050-laptop",
+      "name": "NVIDIA GeForce RTX 5050 Laptop GPU",
+      "aliases": ["GeForce RTX 5050 Laptop GPU", "RTX 5050 Laptop GPU", "RTX 5050 Laptop"],
+      "brand": "NVIDIA",
+      "vramGb": 8,
+      "boostGhz": 2.4,
+      "score": 14000,
+      "tier": "entry"
+    }
+  ],
+  "games": [
+    {
+      "id": "valorant",
+      "title": "발로란트 (VALORANT)",
+      "genre": "경쟁 FPS",
+      "reqCpuScore": 12000,
+      "reqGpuScore": 8000,
+      "reqRamGb": 8
+    },
+    {
+      "id": "pubg",
+      "title": "배틀그라운드 (PUBG)",
+      "genre": "배틀로얄 슈터",
+      "reqCpuScore": 18000,
+      "reqGpuScore": 14000,
+      "reqRamGb": 16
+    },
+    {
+      "id": "battlefield-6",
+      "title": "배틀필드 6 (Battlefield 6)",
+      "genre": "대규모 멀티플레이어 FPS",
+      "reqCpuScore": 23000,
+      "reqGpuScore": 17000,
+      "reqRamGb": 16
+    },
+    {
+      "id": "monster-hunter-wilds",
+      "title": "몬스터 헌터 와일즈",
+      "genre": "오픈월드 액션 RPG",
+      "reqCpuScore": 26000,
+      "reqGpuScore": 20000,
+      "reqRamGb": 16
+    },
+    {
+      "id": "crimson-desert",
+      "title": "붉은사막 (Crimson Desert)",
+      "genre": "차세대 AAA 오픈월드",
+      "reqCpuScore": 32000,
+      "reqGpuScore": 26000,
+      "reqRamGb": 32
+    }
+  ]
+}

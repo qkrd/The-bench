@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 150" width="240" height="150">
+  <defs>
+    <linearGradient id="cpuSubstrate" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1e1b4b"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+    <linearGradient id="cpuIhs" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#312e81"/>
+      <stop offset="55%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#161a3b"/>
+    </linearGradient>
+    <linearGradient id="cpuAccent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#facc15"/>
+    </linearGradient>
+  </defs>
+  <!-- 기판(PCB) -->
+  <rect x="28" y="12" width="184" height="126" rx="10" fill="url(#cpuSubstrate)" stroke="#38bdf8" stroke-width="2"/>
+  <!-- 상하좌우 금도금 접촉 패드 장식 -->
+  <g fill="#facc15" opacity="0.85">
+    <rect x="52" y="16" width="8" height="4" rx="1"/>
+    <rect x="68" y="16" width="8" height="4" rx="1"/>
+    <rect x="84" y="16" width="8" height="4" rx="1"/>
+    <rect x="148" y="16" width="8" height="4" rx="1"/>
+    <rect x="164" y="16" width="8" height="4" rx="1"/>
+    <rect x="180" y="16" width="8" height="4" rx="1"/>
+    <rect x="52" y="130" width="8" height="4" rx="1"/>
+    <rect x="68" y="130" width="8" height="4" rx="1"/>
+    <rect x="164" y="130" width="8" height="4" rx="1"/>
+    <rect x="180" y="130" width="8" height="4" rx="1"/>
+  </g>
+  <!-- 히트스프레더(IHS) -->
+  <rect x="50" y="28" width="140" height="94" rx="8" fill="url(#cpuIhs)" stroke="#94a3b8" stroke-width="1.5"/>
+  <rect x="62" y="38" width="116" height="74" rx="5" fill="none" stroke="url(#cpuAccent)" stroke-width="1.2" opacity="0.7"/>
+  <!-- 1번 핀 마커 -->
+  <polygon points="36,130 48,130 36,118" fill="#facc15"/>
+  <text x="120" y="79" font-family="system-ui, sans-serif" font-size="26" font-weight="800" fill="#f8fafc" text-anchor="middle" letter-spacing="2">CPU</text>
+  <text x="120" y="98" font-family="system-ui, sans-serif" font-size="9" font-weight="700" fill="#38bdf8" text-anchor="middle" letter-spacing="1.5">PROCESSOR CORE</text>
+</svg>
